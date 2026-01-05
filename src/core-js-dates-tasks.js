@@ -102,8 +102,14 @@ function getCountDaysInMonth(month, year) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const start = new Date(dateStart);
+  const end = new Date(dateEnd);
+
+  const diffMs = end.getTime() - start.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+  return diffDays + 1;
 }
 
 /**
@@ -123,8 +129,12 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const d = new Date(date);
+  const start = new Date(period.start);
+  const end = new Date(period.end);
+
+  return d >= start && d <= end;
 }
 
 /**
@@ -138,8 +148,22 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const d = new Date(date);
+
+  const month = d.getUTCMonth() + 1;
+  const day = d.getUTCDate();
+  const year = d.getUTCFullYear();
+
+  let hours = d.getUTCHours();
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(d.getUTCSeconds()).padStart(2, '0');
+
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours %= 12;
+  if (hours === 0) hours = 12;
+
+  return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds} ${ampm}`;
 }
 
 /**
